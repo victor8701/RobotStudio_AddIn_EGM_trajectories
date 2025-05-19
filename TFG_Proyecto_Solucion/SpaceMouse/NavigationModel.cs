@@ -1,4 +1,4 @@
-﻿// <copyright file="NavigationModel.cs" company="3Dconnexion">
+// <copyright file="NavigationModel.cs" company="3Dconnexion">
 // -------------------------------------------------------------------------------------------------
 // Copyright (c) 2020 3Dconnexion. All rights reserved.
 //
@@ -315,9 +315,7 @@ namespace TDx.GettingStarted.Navigation
         void IView.SetCameraMatrix(Matrix matrix) 
         {
             //{ VMP quat_gemini
-            bool a = true;
-            if (a == true) ChangePosition(matrix);
-            else ChangeOrientation(matrix);
+            ChangePositionOrient(matrix);
             //}
 
             // See 'What do I need to do.docx'
@@ -331,8 +329,8 @@ namespace TDx.GettingStarted.Navigation
             var zAxis = new Vector3((float)matrix.M31, (float)matrix.M32, (float)matrix.M33);
             camera.Target = camera.Eye - (zAxis * distance);
         }
-        // // VMP quat_gemini separo SetCameraMatrix en cambiar posicion u orientacion (no las dos a la vez)
-        void ChangePosition(Matrix matrix)
+        // // VMP quat_gemini separo SetCameraMatrix en camBbiar posicion u orientacion (no las dos a la vez)
+        void ChangePositionOrient(Matrix matrix)
         {
             var m = SpaceToABB(matrix);
 
