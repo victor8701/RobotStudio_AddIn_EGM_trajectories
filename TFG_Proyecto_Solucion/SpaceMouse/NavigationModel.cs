@@ -362,136 +362,32 @@ namespace TDx.GettingStarted.Navigation
                 MyTarget.z += MyTarget.zactual - MyTarget.zprevious;
                 //}
             }
+            //Normalizando para evitar demasiada sensibilidad a la rotacion:
+            var quat = m.Quaternion;
+            double alpha = 0.05; // reduce si quieres aún menos sensibilidad (ej. 0.1 o 0.05)
 
+            MyTarget.qw = (1 - alpha) * MyTarget.quaternion.U0 + alpha * quat.q1;
+            MyTarget.qx = (1 - alpha) * MyTarget.quaternion.U1 + alpha * quat.q2;
+            MyTarget.qy = (1 - alpha) * MyTarget.quaternion.U2 + alpha * quat.q3;
+            MyTarget.qz = (1 - alpha) * MyTarget.quaternion.U3 + alpha * quat.q4;
+
+            MyTarget.quaternion.U0 = MyTarget.qw;
+            MyTarget.quaternion.U1 = MyTarget.qx;
+            MyTarget.quaternion.U2 = MyTarget.qy;
+            MyTarget.quaternion.U3 = MyTarget.qz;
+
+            /* sin normalizar:
             var quat = m.Quaternion;
             MyTarget.qw = quat.q1;
             MyTarget.qx = quat.q2;
             MyTarget.qy = quat.q3;
             MyTarget.qz = quat.q4;
 
-            //Console.WriteLine($"x: {MyTarget.x}, y: {MyTarget.y}, z: {MyTarget.z}");
-            //var aa = m.AxisAngle;
-            //Console.WriteLine($"xx: {m.x.x}, xy: {m.x.y}, xz: {m.x.z}");
-            //Console.WriteLine($"yx: {m.y.x}, yy: {m.y.y}, yz: {m.y.z}");
-            //Console.WriteLine($"zx: {m.z.x}, zy: {m.z.y}, zz: {m.z.z}");
-
-            //{ Teniendo en cuenta RS
-            //Debug.WriteLine($"Posición Cámara: X={MyTarget.x}, Y={MyTarget.y}, Z={MyTarget.z}");
-            //}
-
-            //Console.WriteLine("M41: " + matrix.M41 + ", M42: " + matrix.M42 + ", M43: " + matrix.M43);
-
             MyTarget.quaternion.U0 = MyTarget.qw;
             MyTarget.quaternion.U1 = MyTarget.qx;
             MyTarget.quaternion.U2 = MyTarget.qy;
             MyTarget.quaternion.U3 = MyTarget.qz;
-	
-	        //Debug.WriteLine($"  Rotación Cuaternión (Calculado): W={MyTarget.quaternion.U0:F5}, X={MyTarget.quaternion.U1:F5}, " +
-            //Y={MyTarget.quaternion.U2:F5}, Z={MyTarget.quaternion.U3:F5}");
-            //Debug.WriteLine("--------------------------------------------------");
-            //Debug.WriteLine("--------------------------------------------------");
-        }
-
-        // // VMP quat_gemini separo SetCameraMatrix en cambiar posicion u orientacion (no las dos a la vez)
-        void ChangeOrientation(Matrix matrix)
-        {
-            MyTarget.x = 600.0;
-            MyTarget.y = -6.5;
-            MyTarget.z = 740.0;
-
-            Debug.WriteLine($"Posición Cámara: X={MyTarget.x}, Y={MyTarget.y}, Z={MyTarget.z}");
-
-
-            // Vector X de la cámara (hacia dónde apunta su "derecha")
-            Debug.WriteLine($"  Rot Eje X: ({matrix.M11:F3}, {matrix.M12:F3}, {matrix.M13:F3})");
-            // Vector Y de la cámara (hacia dónde apunta su "arriba")
-            Debug.WriteLine($"  Rot Eje Y: ({matrix.M21:F3}, {matrix.M22:F3}, {matrix.M23:F3})");
-            // Vector Z de la cámara (hacia dónde apunta su "adelante" o "atrás", depende de la convención)
-            Debug.WriteLine($"  Rot Eje Z: ({matrix.M31:F3}, {matrix.M32:F3}, {matrix.M33:F3})");
-
-            //{ VMP quat_gemini
-            double trace = matrix.M11 + matrix.M22 + matrix.M33;
-            // Sustituir MyTarget.quaternion por nuevo quaternion temporal
-            EgmQuaternion quatCamera = new EgmQuaternion();
-            if (trace > 0)
-            {
-                double s = 0.5 / Math.Sqrt(trace + 1.0);
-                quatCamera.U0 = 0.25 / s;                      //W
-                quatCamera.U1 = (matrix.M32 - matrix.M23) * s; //X
-                quatCamera.U2 = (matrix.M13 - matrix.M31) * s; //Y
-                quatCamera.U3 = (matrix.M21 - matrix.M12) * s; //Z
-            }
-            else
-            {
-                if (matrix.M11 > matrix.M22 && matrix.M11 > matrix.M33)
-                {
-                    double s = 2.0 * Math.Sqrt(1.0 + matrix.M11 - matrix.M22 - matrix.M33);
-                    quatCamera.U0 = (matrix.M32 - matrix.M23) / s;
-                    quatCamera.U1 = 0.25 * s;
-                    quatCamera.U2 = (matrix.M12 + matrix.M21) / s;
-                    quatCamera.U3 = (matrix.M13 + matrix.M31) / s;
-                }
-                else if (matrix.M22 > matrix.M33)
-                {
-                    double s = 2.0 * Math.Sqrt(1.0 + matrix.M22 - matrix.M11 - matrix.M33);
-                    quatCamera.U0 = (matrix.M13 - matrix.M31) / s;
-                    quatCamera.U1 = (matrix.M12 + matrix.M21) / s;
-                    quatCamera.U2 = 0.25 * s;
-                    quatCamera.U3 = (matrix.M23 + matrix.M32) / s;
-                }
-                else
-                {
-                    double s = 2.0 * Math.Sqrt(1.0 + matrix.M33 - matrix.M11 - matrix.M22);
-                    quatCamera.U0 = (matrix.M21 - matrix.M12) / s;
-                    quatCamera.U1 = (matrix.M13 + matrix.M31) / s;
-                    quatCamera.U2 = (matrix.M23 + matrix.M32) / s;
-                    quatCamera.U3 = 0.25 * s;
-                }
-            }
-
-            quatCamera = NormalizeQuaternion(quatCamera); //Normalizar quatCamera con funcion creada
-
-            double alpha = 0.0025; // Factor de suavizado. Experimentar (ej. 0.01 a 0.2) //VMP quat_gemini
-
-            EgmQuaternion quatInterpolated = new EgmQuaternion //VMP quat_gemini
-            {
-                U0 = (1.0 - alpha) * MyTarget.quaternion.U0 + alpha * quatCamera.U0,
-                U1 = (1.0 - alpha) * MyTarget.quaternion.U1 + alpha * quatCamera.U1,
-                U2 = (1.0 - alpha) * MyTarget.quaternion.U2 + alpha * quatCamera.U2,
-                U3 = (1.0 - alpha) * MyTarget.quaternion.U3 + alpha * quatCamera.U3
-            };
-
-            MyTarget.quaternion = NormalizeQuaternion(quatInterpolated); // Normalizar y guardar el suavizado
-
-            Debug.WriteLine($"  Cuaternión CRUDO Cámara (U0W,U1X,U2Y,U3Z): {quatCamera.U0:F5}, " +
-                $"{quatCamera.U1:F5}, {quatCamera.U2:F5}, {quatCamera.U3:F5}");
-
-            //}VMP quat_gemini
-
-            Debug.WriteLine($"  Rotación Cuaternión (Calculado): W={MyTarget.quaternion.U0:F5}, X={MyTarget.quaternion.U1:F5}, " +
-                $"Y={MyTarget.quaternion.U2:F5}, Z={MyTarget.quaternion.U3:F5}");
-            Debug.WriteLine("--------------------------------------------------");
-            Debug.WriteLine("--------------------------------------------------");
-            //} VMP
-        }
-        // VMP VS_3D_RS 
-        // Funcion creada para normalizar quat y poder rotar en RS
-        public static EgmQuaternion NormalizeQuaternion(EgmQuaternion q)
-        {
-            double mag = Math.Sqrt(q.U0 * q.U0 + q.U1 * q.U1 + q.U2 * q.U2 + q.U3 * q.U3);
-            if (mag < 0.000001)
-            { // Evitar división por cero o si es casi cero
-              // Devolver identidad si la magnitud es demasiado pequeña
-                return new EgmQuaternion { U0 = 1.0, U1 = 0.0, U2 = 0.0, U3 = 0.0 };
-            }
-
-            return new EgmQuaternion
-            {
-                U0 = q.U0 / mag,
-                U1 = q.U1 / mag,
-                U2 = q.U2 / mag,
-                U3 = q.U3 / mag
-            };
+            */
         }
 
         /// <summary>
