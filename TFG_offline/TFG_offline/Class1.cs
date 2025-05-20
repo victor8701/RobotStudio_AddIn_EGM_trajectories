@@ -24,11 +24,8 @@ namespace RobotStudioEmptyAddin_16nov
             SimpleButton SimpB1 = new SimpleButton(true, 1, "Load .csv"); // (newTab, numButton, functionality)
             SimpB1.CreateButton();
 
-            SimpleButton SimpB2 = new SimpleButton(false, 2, "Load Controller"); // (newTab, numButton, functionality)
+            SimpleButton SimpB2 = new SimpleButton(false, 2, "Get paths from station"); // (newTab, numButton, functionality)
             SimpB2.CreateButton();
-
-            SimpleButton SimpB3 = new SimpleButton(false, 3, "Get paths from station"); // (newTab, numButton, functionality)
-            SimpB3.CreateButton();
 
             //LoadController.robName = "IRB140_6_81_C_G_03.rslib";
             LoadController.robName = " ";
