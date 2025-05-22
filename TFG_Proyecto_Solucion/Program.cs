@@ -34,6 +34,8 @@ namespace TDx.GettingStarted
         [STAThread]
         public static void Main()
         {
+            NavigationModel.SpaceToABBinit();
+            
             // Inicialización de MyTarget
             MyTarget.xprevious = 0;
             MyTarget.yprevious = 0;
