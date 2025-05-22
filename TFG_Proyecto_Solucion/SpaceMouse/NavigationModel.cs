@@ -43,6 +43,17 @@ namespace TDx.GettingStarted.Navigation
         private bool enable = false;
         private string profile = default(string);
 
+        //{ SpaceToABB
+        static ABB.Robotics.Math.Matrix4 H_p_c   ;
+        static ABB.Robotics.Math.Matrix3 R_x_90  ;
+        static ABB.Robotics.Math.Matrix3 R_y_m90 ;
+        static ABB.Robotics.Math.Matrix4 H_0_p   ;
+        static ABB.Robotics.Math.Matrix3 R_0_c   ;
+        static ABB.Robotics.Math.Matrix4 H_0_c   ;
+        static ABB.Robotics.Math.Matrix3 R_0_tcp ;
+        static ABB.Robotics.Math.Matrix4 H_c_tcp ;
+        //}
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationModel"/> class.
         /// </summary>
@@ -275,35 +286,40 @@ namespace TDx.GettingStarted.Navigation
                 ).Inverse();
             //}
 
+            // 2 Y 3 en SpaceToABBinit()
+
+            return H_0_p * H_p_c * H_c_tcp; // = H_0_tcp
+        }
+
+        public static void SpaceToABBinit()
+        {
             //{2
-            var R_x_90 = new ABB.Robotics.Math.Matrix3(
+             R_x_90 = new ABB.Robotics.Math.Matrix3(
                     new ABB.Robotics.Math.Vector3(1, 0, 0),
                     new ABB.Robotics.Math.Vector3(0, 0, 1),
                     new ABB.Robotics.Math.Vector3(0, -1, 0)
                 );
 
-            var R_y_m90 = new ABB.Robotics.Math.Matrix3(
+             R_y_m90 = new ABB.Robotics.Math.Matrix3(
                     new ABB.Robotics.Math.Vector3(0, 0, 1),
                     new ABB.Robotics.Math.Vector3(0, 1, 0),
                     new ABB.Robotics.Math.Vector3(-1, 0, 0)
                 );
 
-            var H_0_p = new ABB.Robotics.Math.Matrix4(R_x_90 * R_y_m90, new ABB.Robotics.Math.Vector3(0, 0, 0));
+             H_0_p = new ABB.Robotics.Math.Matrix4(R_x_90 * R_y_m90, new ABB.Robotics.Math.Vector3(0, 0, 0));
             //}
 
-            var R_0_c = new ABB.Robotics.Math.Matrix3(
+             R_0_c = new ABB.Robotics.Math.Matrix3(
                     new ABB.Robotics.Math.Vector3(-0.577095830127712, -0.707467318464138, -0.407983378873496),
                     new ABB.Robotics.Math.Vector3(0.577094773291242, -0.706745715469379, 0.409233622260282),
                     new ABB.Robotics.Math.Vector3(-0.577859897713637, 0.000721941417984738, 0.816135698393402)
                 );
 
             //{3
-            var H_0_c = new ABB.Robotics.Math.Matrix4(R_0_c, new ABB.Robotics.Math.Vector3(0, 0, 0));
-            var R_0_tcp = new ABB.Robotics.Math.Quaternion(0, new ABB.Robotics.Math.Vector3(0, 1, 0)).Matrix;
-            var H_c_tcp = H_0_c.Inverse() * new ABB.Robotics.Math.Matrix4(R_0_tcp, new ABB.Robotics.Math.Vector3(0, 0, 0));
+             H_0_c = new ABB.Robotics.Math.Matrix4(R_0_c, new ABB.Robotics.Math.Vector3(0, 0, 0));
+             R_0_tcp = new ABB.Robotics.Math.Quaternion(0, new ABB.Robotics.Math.Vector3(0, 1, 0)).Matrix;
+             H_c_tcp = H_0_c.Inverse() * new ABB.Robotics.Math.Matrix4(R_0_tcp, new ABB.Robotics.Math.Vector3(0, 0, 0));
             //}
-
-            return H_0_p * H_p_c * H_c_tcp; // = H_0_tcp
         }
 
         /// <summary>
@@ -357,26 +373,12 @@ namespace TDx.GettingStarted.Navigation
                 //}
 
                 //{ Calculamos Incr(x) y se lo sumamos a X
-                MyTarget.x += MyTarget.xactual - MyTarget.xprevious;
-                MyTarget.y += MyTarget.yactual - MyTarget.yprevious;
-                MyTarget.z += MyTarget.zactual - MyTarget.zprevious;
+                MyTarget.x += (MyTarget.xactual - MyTarget.xprevious) * 100; // Mejor aumentar cambio en posicion que normalizar orientación
+                MyTarget.y += (MyTarget.yactual - MyTarget.yprevious) * 100; // Mejor aumentar cambio en posicion que normalizar orientación
+                MyTarget.z += (MyTarget.zactual - MyTarget.zprevious) * 100; // Mejor aumentar cambio en posicion que normalizar orientación
                 //}
             }
-            //Normalizando para evitar demasiada sensibilidad a la rotacion:
-            var quat = m.Quaternion;
-            double alpha = 0.05; // reduce si quieres aún menos sensibilidad (ej. 0.1 o 0.05)
-
-            MyTarget.qw = (1 - alpha) * MyTarget.quaternion.U0 + alpha * quat.q1;
-            MyTarget.qx = (1 - alpha) * MyTarget.quaternion.U1 + alpha * quat.q2;
-            MyTarget.qy = (1 - alpha) * MyTarget.quaternion.U2 + alpha * quat.q3;
-            MyTarget.qz = (1 - alpha) * MyTarget.quaternion.U3 + alpha * quat.q4;
-
-            MyTarget.quaternion.U0 = MyTarget.qw;
-            MyTarget.quaternion.U1 = MyTarget.qx;
-            MyTarget.quaternion.U2 = MyTarget.qy;
-            MyTarget.quaternion.U3 = MyTarget.qz;
-
-            /* sin normalizar:
+            // sin normalizar:
             var quat = m.Quaternion;
             MyTarget.qw = quat.q1;
             MyTarget.qx = quat.q2;
@@ -387,7 +389,20 @@ namespace TDx.GettingStarted.Navigation
             MyTarget.quaternion.U1 = MyTarget.qx;
             MyTarget.quaternion.U2 = MyTarget.qy;
             MyTarget.quaternion.U3 = MyTarget.qz;
-            */
+
+            //Normalizando para evitar demasiada sensibilidad a la rotacion:
+            /*var quat = m.Quaternion;
+            double alpha = 0.05; // reduce si quieres aún menos sensibilidad (ej. 0.1 o 0.05)
+
+            MyTarget.qw = (1 - alpha) * MyTarget.quaternion.U0 + alpha * quat.q1;
+            MyTarget.qx = (1 - alpha) * MyTarget.quaternion.U1 + alpha * quat.q2;
+            MyTarget.qy = (1 - alpha) * MyTarget.quaternion.U2 + alpha * quat.q3;
+            MyTarget.qz = (1 - alpha) * MyTarget.quaternion.U3 + alpha * quat.q4;
+
+            MyTarget.quaternion.U0 = MyTarget.qw;
+            MyTarget.quaternion.U1 = MyTarget.qx;
+            MyTarget.quaternion.U2 = MyTarget.qy;
+            MyTarget.quaternion.U3 = MyTarget.qz;*/
         }
 
         /// <summary>
