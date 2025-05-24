@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RobotStudioAddIn xmlns="urn:abb-robotics-robotstudio-addin"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="urn:abb-robotics-robotstudio-addin file:///C:\Program%20Files%20(x86)\ABB\SDK\RobotStudio%202024%20SDK\RobotStudioAddin.xsd"
+                  autoLoad="false">
+
+  <!-- Make sure that ApplicationId is unique -->
+  <ApplicationId>com.mycompany.RobotStudioEmptyAddin1_16nov</ApplicationId>
+  
+  <!-- <DisplayName>RobotStudioEmptyAddin1_16nov</DisplayName/> -->
+  <!-- <DisplayVersion>1.0.0.1</DisplayVersion/> -->
+  <!-- <Description>RobotStudioEmptyAddin1_16nov description</Description/> -->
+
+  <AddInType>General</AddInType>
+
+  <Assembly>
+  <FileName>RobotStudioEmptyAddin1_16nov.dll</FileName>
+  <Path>C:\ProgramData\ABB\DistributionPackages\CreadoPorMi_f-1.0\RobotStudio\Add-In</Path>
+</Assembly>
+
+  <!-- By default, the minimum host version is equal to the SDK version -->
+  <!-- You can change this if your add-in supports older RobotStudio versions -->
+  <MinimumHostVersion>23.4</MinimumHostVersion>
+  <Dependencies>Station</Dependencies>
+  <!-- Change Platform to x86 if your add-in uses any native x86 components -->
+  <Platform>Any</Platform>
+
+</RobotStudioAddIn>

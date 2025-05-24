@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{26C08F38-877E-49F6-A950-70C61D2543AD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RobotStudioEmptyAddin1_16nov</RootNamespace>
+    <AssemblyName>RobotStudioEmptyAddin1_16nov</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\..\..\..\..\..\ProgramData\ABB\DistributionPackages\CreadoPorMi_f-1.0\RobotStudio\Add-In\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(MSBuildProgramFiles32)\ABB\RobotStudio 2024\Bin\RobotStudio.exe</StartProgram>
+    <StartArguments>/addin:"C:\Users\Viktor\source\repos\RobotStudioEmptyAddin1_16nov\RobotStudioEmptyAddin1_16nov\bin\Debug\RobotStudioEmptyAddin1_16nov.rsaddin"</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(MSBuildProgramFiles32)\ABB\RobotStudio 2024\Bin\RobotStudio.exe</StartProgram>
+    <StartArguments>/addin:"C:\Users\Viktor\source\repos\RobotStudioEmptyAddin1_16nov\RobotStudioEmptyAddin1_16nov\bin\Release\RobotStudioEmptyAddin1_16nov.rsaddin"</StartArguments>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ABB.Robotics.Controllers.PC">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\ABB\SDK\PCSDK 2024\ABB.Robotics.Controllers.PC.dll</HintPath>
+    </Reference>
+    <Reference Include="ABB.Robotics.Math">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(MSBuildProgramFiles32)\ABB\SDK\RobotStudio 2024 SDK\ABB.Robotics.Math.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ABB.Robotics.RobotStudio">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(MSBuildProgramFiles32)\ABB\SDK\RobotStudio 2024 SDK\ABB.Robotics.RobotStudio.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ABB.Robotics.RobotStudio.Controllers">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\ABB\SDK\RobotStudio 2024 SDK\ABB.Robotics.RobotStudio.Controllers.dll</HintPath>
+    </Reference>
+    <Reference Include="ABB.Robotics.RobotStudio.Environment">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(MSBuildProgramFiles32)\ABB\SDK\RobotStudio 2024 SDK\ABB.Robotics.RobotStudio.Environment.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ABB.Robotics.RobotStudio.Stations">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(MSBuildProgramFiles32)\ABB\SDK\RobotStudio 2024 SDK\ABB.Robotics.RobotStudio.Stations.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ABB.Robotics.RobotStudio.Stations.Forms">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(MSBuildProgramFiles32)\ABB\SDK\RobotStudio 2024 SDK\ABB.Robotics.RobotStudio.Stations.Forms.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ABB.Robotics.RobotStudio.UI">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(MSBuildProgramFiles32)\ABB\SDK\RobotStudio 2024 SDK\ABB.Robotics.RobotStudio.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Buttons\CustomBtn_2.cs" />
+    <Compile Include="Buttons\PopUpBtn2.cs" />
+    <Compile Include="Paths\CreatePath.cs" />
+    <Compile Include="Paths\RsMoveInst.cs" />
+    <Compile Include="Targets\AlignTargets.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="Buttons\Button.cs" />
+    <Compile Include="Targets\CopyTarget.cs" />
+    <Compile Include="Targets\PickTarget.cs" />
+    <Compile Include="Targets\CreateTarget.cs" />
+    <Compile Include="Buttons\CustomBtn.cs" />
+    <Compile Include="Buttons\DocumentWindowBtn.cs" />
+    <Compile Include="Buttons\DocumentWindowCatBtn.cs" />
+    <Compile Include="Buttons\NewViewBtn.cs" />
+    <Compile Include="Buttons\PopUpBtn.cs" />
+    <Compile Include="Buttons\SimpleBtn.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Buttons\SplitBtn.cs" />
+    <Compile Include="Targets\PropertiesTarget.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="RobotStudioEmptyAddin1_16nov.rsaddin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="stdole1">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)RobotStudioEmptyAddin1_16nov.rsaddin" "C:\ProgramData\ABB\DistributionPackages\CreadoPorMi_f-1.0\RobotStudio\Add-In\"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
