@@ -1,4 +1,4 @@
-﻿using ABB.Robotics.Controllers.RapidDomain;
+using ABB.Robotics.Controllers.RapidDomain;
 using ABB.Robotics.Math;
 using ABB.Robotics.RobotStudio;
 using ABB.Robotics.RobotStudio.Environment;
@@ -28,18 +28,18 @@ namespace  TFG_offline.Buttons
         public static void Create()
         {
             // Begin UndoStep
-            Project.UndoContext.BeginUndoStep("Create .csv file by a Path from the Station");
+            Project.UndoContext.BeginUndoStep("csv file with station Paths                    .");
 
             try
             {
                 // Create a new group in the ribbon for our buttons
-                RibbonGroup customControlGroup = new RibbonGroup("Create .csv file by a Path from the Station", "Create .csv file by a Path from the Station Control");
+                RibbonGroup customControlGroup = new RibbonGroup("csv file with station Paths                    .", "csv file with station Paths                    . Control");
 
                 // Create combobox button control
-                buttonComboBox = new CommandBarComboBox("Create .csv file by a Path from the Station");
-                buttonComboBox.Caption = "Create .csv file by a Path from the Station";
+                buttonComboBox = new CommandBarComboBox("csv file with station Paths                    .");
+                buttonComboBox.Caption = "csv file with station Paths                    .";
                 buttonComboBox.Image = Image.FromFile("C:\\AAAA\\Boton2.jpg");
-                buttonComboBox.HelpText = "Create .csv file by a Path from the Station";
+                buttonComboBox.HelpText = ".csv file with station Paths                    .";
 
                 for (int i = 0; i < Path_list.MyPaths.Count-1; i++)
                 {
