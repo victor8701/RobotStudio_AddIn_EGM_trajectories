@@ -1,4 +1,4 @@
-﻿using ABB.Robotics.Math;
+using ABB.Robotics.Math;
 using ABB.Robotics.RobotStudio;
 using ABB.Robotics.RobotStudio.Environment;
 using ABB.Robotics.RobotStudio.Stations;
@@ -109,11 +109,7 @@ namespace  TFG_offline.Buttons
 
                 if (numButton == 1) SimpleButton1.Pressed();
                 if (numButton == 2) SimpleButton2.Pressed();
-                if (numButton == 3)
-                {
-                    SimpleButton3.Pressed();
-                    CustomButton.Create();
-                }
+
             }
         }
     }
