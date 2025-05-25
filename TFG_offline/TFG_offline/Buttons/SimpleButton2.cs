@@ -11,11 +11,17 @@ using ABB.Robotics.RobotStudio;
 
 namespace TFG_offline.Buttons
 {
-    internal class SimpleButton3
+    internal class SimpleButton2
     {
+        private static bool firstTime = true;
         public static void Pressed()
         {
-                Path_list.GetStationPaths();
+            Path_list.GetStationPaths();
+            if (firstTime)
+            {
+                CustomButton.Create();
+                firstTime = false;
+            }
         }
     }
 }
