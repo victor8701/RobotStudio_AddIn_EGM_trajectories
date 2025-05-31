@@ -2,27 +2,27 @@ MODULE MOD_EGM
 
     VAR egmident egmID1;             ! Identificador para nuestra sesión EGM
     VAR robtarget tool0_start;           ! Para guardar la posición inicial
-    VAR egmstate egmCurrentState;   ! Para leer el estado EGM (opcional)
+    VAR egmstate egmCurrentState;   ! Para leer el estado EGM           
 
-    ! Definimos un punto de inicio seguro (¡AJUSTA ESTOS VALORES A TU ROBOT!)
+                                                                             
+    ! Definimos un punto de inicio seguro
     CONST robtarget pStart := [[600, -6.5, 740], [0, 0, 1, 0], [0, 0, 0, 0], [9E9, 9E9, 9E9, 9E9, 9E9, 9E9]];
-    ! Nota: La orientación [1,0,0,0] es sin rotación respecto a la base.
-    !       Asegúrate de que pStart sea alcanzable y seguro.
-    CONST pose pose_cero := [[0,0,0],[1,0,0,0]]; ! Una pose neutra para referencia
-    
-    ! Define la tolerancia para la convergencia de posición (ej: +/- 1 mm)
+                                                                        
+                                                            
+    CONST pose pose_cero := [[0,0,0],[1,0,0,0]]; ! Una pose neutra para referencia                                                                       
     CONST egm_minmax pose_tolerance := [-1, 1];
 
     PROC main()        
         ! Mover a un punto de inicio conocido y seguro ANTES de activar EGM
-        MoveJ pStart, v100, fine, tool0; ! Movimiento articular rápido a pStart
+                                                                               
+        MoveJ pStart, v100, fine, tool0;
 
         ! --- Inicio de la configuración EGM ---
         TPWrite "Preparando EGM...";
         EGMReset egmID1;       ! Resetea por si había una sesión anterior con este ID
         EGMGetId egmID1;       ! Obtiene una nueva identidad para EGM
 
-        ! Configura EGM para usar el protocolo UdpUc con el dispositivo que creaste
+        ! Configura EGM para usar el protocolo UdpUc con el dispositivo creado     
         ! Usamos \Pose porque nuestro C# enviará coordenadas cartesianas
         EGMSetupUC ROB_1, egmID1, "default", "EGMsensor" \Pose;
 
@@ -30,12 +30,14 @@ MODULE MOD_EGM
         tool0_start := CRobT(\Tool:=tool0); ! Guarda la pose actual de tool0
 
         ! Activa la sesión EGM en modo Pose.
-        ! Le decimos qué ejes queremos controlar desde C# (x, y, z). La orientación la dejamos fija.
+                                                                                                    
         ! CorrFrame y SensorFrame definen en qué sistema de coordenadas están los datos de C#.
-        ! EGM_FRAME_BASE significa que X,Y,Z que envías desde C# son respecto a la BASE del robot.
-        ! Si los enviaras respecto a wobj0, usarías EGM_FRAME_WOBJ aquí.
-        !EGMActPose egmID1, pose_cero, EGM_FRAME_BASE, pose_cero, EGM_FRAME_BASE \x:=pose_tolerance \y:=pose_tolerance \z:=pose_tolerance \LpFilter:=20, \SampleRate:=4, \MaxPosDeviation:=1000, \MaxSpeedDeviation:=1000;        
-        EGMActPose egmID1, pose_cero, EGM_FRAME_BASE, pose_cero, EGM_FRAME_BASE \x:=pose_tolerance \y:=pose_tolerance \z:=pose_tolerance \Rx:=pose_tolerance \Ry:=pose_tolerance \Rz:=pose_tolerance \LpFilter:=20, \SampleRate:=4, \MaxPosDeviation:=1000, \MaxSpeedDeviation:=1000;        
+        ! EGM_FRAME_BASE significa que X,Y,Z que envías desde C# son respecto a la BASE del robot.                                                            
+                                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                             
+        EGMActPose egmID1, pose_cero, EGM_FRAME_BASE, pose_cero, EGM_FRAME_BASE \x:=pose_tolerance \y:=pose_tolerance \z:=pose_tolerance 
+        \Rx:=pose_tolerance \Ry:=pose_tolerance \Rz:=pose_tolerance 
+        \LpFilter:=20, \SampleRate:=4, \MaxPosDeviation:=1000, \MaxSpeedDeviation:=1000;        
         ! LpFilter es un filtro, 20Hz es un valor común para empezar.
 
         ! --- Fin de la configuración EGM ---
@@ -44,16 +46,11 @@ MODULE MOD_EGM
         TPWrite "Iniciando movimiento EGM...";
         ! Le dice al robot que empiece a moverse siguiendo las instrucciones de C#
         ! EGM_STOP_HOLD: Si deja de recibir mensajes, se queda quieto en la última posición recibida.
-        ! \x \y \z : Confirmar que estos ejes se controlan externamente.
+        ! \x \y \z : Confirma que estos ejes se controlan externamente.
         EGMRunPose egmID1, EGM_STOP_HOLD \x \y \z \Rx \Ry \Rz \CondTime:=10 \RampInTime:=0.05; !si quiero enviar posicion y rotacion
         ! CondTime: Cuánto tiempo debe cumplirse la condición de parada (no aplica mucho con STOP_HOLD).
         ! RampInTime: Suavizado al inicio del movimiento.
-
-        ! --- El robot se moverá AHORA según tu C# ---
-        TPWrite "EGM Activo. Moviendo según C#...";
-        ! Aquí RAPID se queda esperando hasta que EGM termine o se pare.
-        ! Puedes añadir lógica RAPID que se ejecute MIENTRAS EGM está activo si usas \NoWaitCond en EGMRunPose,
-        ! pero para empezar es más simple así.
+        
 
         ! --- Parar EGM (importante hacerlo de forma controlada) ---
         PararEGM;
