@@ -1,0 +1,4 @@
+Folder with videos of EGM simulation. 
+ExperimentoEGM_SpaceMouse.mp4 -> Simulation of robot guided by Space Mouse.
+ExperimentoEGM_FicheroCSV.mp4 -> Simulation of robot guided my .csv file.
+The result is the same trajectory, but obtained from different projects (TFG_Proyecto_Solucion and EGM_VS respectively).
